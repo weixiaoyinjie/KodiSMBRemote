@@ -42,7 +42,8 @@ jobs:
           set -euo pipefail
           ROOT="$(find "$GITHUB_WORKSPACE" -maxdepth 5 -type f -name settings.gradle -print -quit)"
           if [ -z "$ROOT" ]; then
-            ARCHIVE="$(find "$GITHUB_WORKSPACE" -maxdepth 2 -type f -iname '*Kodi*Cinema*.zip' -print -quit)"
+            ARCHIVE="$GITHUB_WORKSPACE/KodiCinemaRemote_v2.1_Fold6_Thumbs_List_Playlist_Source.zip"
+            if [ ! -f "$ARCHIVE" ]; then ARCHIVE="$(find "$GITHUB_WORKSPACE" -maxdepth 2 -type f -iname '*Kodi*Cinema*.zip' -print -quit)"; fi
             if [ -z "$ARCHIVE" ]; then ARCHIVE="$(find "$GITHUB_WORKSPACE" -maxdepth 2 -type f -iname '*.zip' -print -quit)"; fi
             if [ -z "$ARCHIVE" ]; then echo 'No project or ZIP found'; exit 1; fi
             mkdir -p "$RUNNER_TEMP/kodi-cinema"
@@ -59,11 +60,11 @@ jobs:
         run: |
           gradle --no-daemon --stacktrace -p "$PROJECT_DIR" assembleDebug
           mkdir -p "$GITHUB_WORKSPACE/apk-output"
-          cp "$PROJECT_DIR/app/build/outputs/apk/debug/app-debug.apk" "$GITHUB_WORKSPACE/apk-output/KodiCinemaRemote-v2.0-debug.apk"
+          cp "$PROJECT_DIR/app/build/outputs/apk/debug/app-debug.apk" "$GITHUB_WORKSPACE/apk-output/KodiCinemaRemote-v2.1-debug.apk"
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: KodiCinemaRemote-v2.0-debug
-          path: apk-output/KodiCinemaRemote-v2.0-debug.apk
+          name: KodiCinemaRemote-v2.1-debug
+          path: apk-output/KodiCinemaRemote-v2.1-debug.apk
           if-no-files-found: error
